@@ -8,7 +8,7 @@
 PRODUCT_NAME = brubaker_led_controls
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.brubaker.brubakerLedControls
+PRODUCT_BUNDLE_IDENTIFIER = com.brubaker.ledcontrols
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2026 com.brubaker. All rights reserved.
