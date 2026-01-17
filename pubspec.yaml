@@ -2,7 +2,7 @@ name: brubaker_led_controls
 description: A Brubaker home app simplified edition
 
 publish_to: 'none'
-version: 1.0.0+42
+version: 1.0.0+44
 
 environment:
   sdk: '>=3.4.0 <4.0.0'
