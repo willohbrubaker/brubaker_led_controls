@@ -37,8 +37,8 @@ class StarFieldState extends State<StarField>
         random == 0
             ? Colors.white
             : random == 1
-            ? const Color(0xFF00FFFF).withOpacity(0.5)
-            : const Color(0xFFFFFF00).withOpacity(0.5),
+                ? const Color(0xFF00FFFF).withOpacity(0.5)
+                : const Color(0xFFFFFF00).withOpacity(0.5),
       );
     }
   }
@@ -86,22 +86,25 @@ class _StarPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Skip painting if size is invalid
-    if (size.width <= 0 || size.height <= 0) return;
+    if (size.isEmpty)
+      return; // More idiomatic than separate width/height checks
+
+    final double anim = animationValue * 2 * math.pi;
+    final double scale = 1.0 + math.sin(anim) * 0.3;
+    final double baseRadius = 1.5;
 
     for (int i = 0; i < stars.length; i++) {
-      final paint = Paint()..color = colors[i].withOpacity(opacity);
-      final scale = 1.0 + math.sin(animationValue * 2 * math.pi) * 0.3;
-      final radius = 1.5 * scale;
+      final paint = Paint()
+        ..color = colors[i].withOpacity(opacity)
+        ..isAntiAlias =
+            true; // ← tiny improvement for quality on high-dpi screens
 
-      // Ensure radius is positive and valid
-      if (radius <= 0 || radius.isNaN) continue;
+      final double radius = baseRadius * scale;
+      if (radius <= 0) continue;
 
-      // Normalize positions to stay within canvas bounds
-      double xPos = stars[i].dx % size.width;
-      double yPos = (stars[i].dy + offset) % size.height;
+      double xPos = (stars[i].dx % size.width);
+      double yPos = ((stars[i].dy + offset) % size.height);
 
-      // Handle negative modulo results
       if (xPos < 0) xPos += size.width;
       if (yPos < 0) yPos += size.height;
 
@@ -111,9 +114,9 @@ class _StarPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _StarPainter oldDelegate) {
-    // Repaint only if animation value, opacity, or offset changes
     return oldDelegate.animationValue != animationValue ||
         oldDelegate.opacity != opacity ||
-        oldDelegate.offset != offset;
+        oldDelegate.offset != offset ||
+        oldDelegate.stars != stars; // ← only if you ever change stars list
   }
 }

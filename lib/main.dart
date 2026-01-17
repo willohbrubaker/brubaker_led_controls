@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:ui';
 import 'dart:async';
 import 'dart:math';
-import 'dart:io';
+import 'dart:io' show Platform, File;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,7 +15,8 @@ import 'package:http_parser/http_parser.dart';
 
 import 'star_field.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Critical for iOS stability
   runApp(const BrubakerLedApp());
 }
 
@@ -102,60 +103,60 @@ class _ModeGalleryScreenState extends State<ModeGalleryScreen>
     {'name': 'constant-red', 'image': 'assets/modes/constant-red.png'},
     {
       'name': 'proletariat-crackle',
-      'image': 'assets/modes/proletariat-crackle.png',
+      'image': 'assets/modes/proletariat-crackle.png'
     },
     {'name': 'soma-haze', 'image': 'assets/modes/soma-haze.png'},
     {'name': 'loonie-freefall', 'image': 'assets/modes/loonie-freefall.png'},
     {'name': 'bokanovsky-burst', 'image': 'assets/modes/bokanovsky-burst.png'},
     {
       'name': 'total-perspective-vortex',
-      'image': 'assets/modes/total-perspective-vortex.png',
+      'image': 'assets/modes/total-perspective-vortex.png'
     },
     {
       'name': 'golgafrincham-drift',
-      'image': 'assets/modes/golgafrincham-drift.png',
+      'image': 'assets/modes/golgafrincham-drift.png'
     },
     {
       'name': 'bistromathics-surge',
-      'image': 'assets/modes/bistromathics-surge.png',
+      'image': 'assets/modes/bistromathics-surge.png'
     },
     {
       'name': 'groks-dissolution',
-      'image': 'assets/modes/groks-dissolution.png',
+      'image': 'assets/modes/groks-dissolution.png'
     },
     {'name': 'newspeak-shrink', 'image': 'assets/modes/newspeak-shrink.png'},
     {
       'name': 'nolite-te-bastardes',
-      'image': 'assets/modes/nolite-te-bastardes.png',
+      'image': 'assets/modes/nolite-te-bastardes.png'
     },
     {
       'name': 'infinite-improbability-drive',
-      'image': 'assets/modes/infinite-improbability-drive.png',
+      'image': 'assets/modes/infinite-improbability-drive.png'
     },
     {
       'name': 'big-brother-glare',
-      'image': 'assets/modes/big-brother-glare.png',
+      'image': 'assets/modes/big-brother-glare.png'
     },
     {
       'name': 'replicant-retirement',
-      'image': 'assets/modes/replicant-retirement.png',
+      'image': 'assets/modes/replicant-retirement.png'
     },
     {
       'name': 'water-brother-bond',
-      'image': 'assets/modes/water-brother-bond.png',
+      'image': 'assets/modes/water-brother-bond.png'
     },
     {'name': 'hypnopaedia-hum', 'image': 'assets/modes/hypnopaedia-hum.png'},
     {
       'name': 'vogon-poetry-pulse',
-      'image': 'assets/modes/vogon-poetry-pulse.png',
+      'image': 'assets/modes/vogon-poetry-pulse.png'
     },
     {
       'name': 'thought-police-flash',
-      'image': 'assets/modes/thought-police-flash.png',
+      'image': 'assets/modes/thought-police-flash.png'
     },
     {
       'name': 'electric-sheep-dream',
-      'image': 'assets/modes/electric-sheep-dream.png',
+      'image': 'assets/modes/electric-sheep-dream.png'
     },
     {'name': 'QRNG', 'image': 'assets/modes/qrng.png'},
     {'name': 'sd-client', 'image': 'assets/modes/sd-client.png'},
@@ -241,9 +242,9 @@ class _ModeGalleryScreenState extends State<ModeGalleryScreen>
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Update failed: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Update failed: $e')),
+        );
       }
     } finally {
       if (mounted) setState(() => isUpdating = false);
@@ -335,11 +336,11 @@ class _ModeGalleryScreenState extends State<ModeGalleryScreen>
                         padding: const EdgeInsets.all(16),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 0.78,
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 16,
-                            ),
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.78,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                        ),
                         itemCount: modes.length,
                         itemBuilder: (context, index) {
                           final mode = modes[index];
@@ -403,8 +404,8 @@ class _ModeGalleryScreenState extends State<ModeGalleryScreen>
                                                 fit: BoxFit.contain,
                                                 errorBuilder: (_, __, ___) =>
                                                     const Icon(
-                                                      Icons.image_not_supported,
-                                                    ),
+                                                  Icons.image_not_supported,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -448,8 +449,7 @@ class _ModeGalleryScreenState extends State<ModeGalleryScreen>
 // ────────────────────────────────────────────────
 // Circle Screen – Home + Gallery
 
-const String serverUrl =
-    'http://108.254.1.184:9026'; // ← moved to global constant
+const String serverUrl = 'http://108.254.1.184:9026';
 
 class CircleHomePage extends StatefulWidget {
   const CircleHomePage({super.key});
@@ -517,10 +517,16 @@ class _CircleHomePageState extends State<CircleHomePage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => MultiPreviewScreen(imageFiles: imageFiles),
-        ),
+            builder: (_) => MultiPreviewScreen(imageFiles: imageFiles)),
       ).then((_) => _loadRandomImage());
     }
+  }
+
+  void _goToGallery() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const GalleryScreen()),
+    );
   }
 
   @override
@@ -530,14 +536,13 @@ class _CircleHomePageState extends State<CircleHomePage> {
     return Stack(
       children: [
         const StarField(opacity: 0.35),
-
         Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 64),
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Glowing circle preview
+                // Circle preview with glow
                 Container(
                   width: 220,
                   height: 220,
@@ -567,8 +572,7 @@ class _CircleHomePageState extends State<CircleHomePage> {
                               imageUrl: _currentImageUrl!,
                               fit: BoxFit.cover,
                               placeholder: (_, __) => const Center(
-                                child: CircularProgressIndicator(),
-                              ),
+                                  child: CircularProgressIndicator()),
                               errorWidget: (_, __, ___) =>
                                   Container(color: Colors.black38),
                             )
@@ -577,29 +581,35 @@ class _CircleHomePageState extends State<CircleHomePage> {
                   ),
                 ),
 
-                const SizedBox(height: 56),
+                const SizedBox(height: 48),
 
+                // Title styled like original app — big, spaced, glowing, single line
                 Text(
                   'CircleScreen',
                   style: GoogleFonts.orbitron(
-                    fontSize: 52,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 2.5,
+                    fontSize: 38,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 2.8, // generous spacing prevents wrapping
+                    height: 1.0, // tight line height
                     shadows: [
-                      Shadow(color: theme.primaryColor, blurRadius: 24),
+                      Shadow(color: theme.primaryColor, blurRadius: 20),
+                      Shadow(color: Colors.deepPurpleAccent, blurRadius: 30),
+                      Shadow(color: Colors.purpleAccent, blurRadius: 40),
                     ],
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
+
                 Text(
                   'Upload photos to your circular display',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 18, color: Colors.white70),
                 ),
 
-                const SizedBox(height: 80),
+                const SizedBox(height: 64),
 
+                // Select Photos button
                 ElevatedButton.icon(
                   onPressed: _pickImages,
                   icon: const Icon(Icons.photo_library, size: 36),
@@ -611,40 +621,31 @@ class _CircleHomePageState extends State<CircleHomePage> {
                     backgroundColor: theme.primaryColor,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 56,
-                      vertical: 24,
-                    ),
+                        horizontal: 56, vertical: 24),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40),
-                    ),
+                        borderRadius: BorderRadius.circular(40)),
                     elevation: 8,
                   ),
                 ),
 
-                const SizedBox(height: 40),
+                const SizedBox(height: 32),
 
-                OutlinedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const GalleryScreen()),
-                    );
-                  },
-                  icon: const Icon(Icons.photo_library_outlined, size: 28),
+                // Gallery / Manage button — same style as above
+                ElevatedButton.icon(
+                  onPressed: _goToGallery,
+                  icon: const Icon(Icons.photo_library_outlined, size: 36),
                   label: const Text(
-                    'View Library',
-                    style: TextStyle(fontSize: 20),
+                    'Manage Library',
+                    style: TextStyle(fontSize: 22),
                   ),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: theme.primaryColor,
-                    side: BorderSide(color: theme.primaryColor, width: 2),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.primaryColor,
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 48,
-                      vertical: 18,
-                    ),
+                        horizontal: 56, vertical: 24),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
+                        borderRadius: BorderRadius.circular(40)),
+                    elevation: 8,
                   ),
                 ),
               ],
@@ -655,8 +656,9 @@ class _CircleHomePageState extends State<CircleHomePage> {
     );
   }
 }
+
 // ────────────────────────────────────────────────
-// Gallery Screen (full page)
+// Gallery Screen
 
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
@@ -693,42 +695,51 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   Future<void> _deleteSelected() async {
-    for (var filename in selectedFilenames) {
-      await http.delete(Uri.parse('$serverUrl/delete/pattie/$filename'));
+    for (var filename in selectedFilenames.toList()) {
+      try {
+        await http.delete(Uri.parse('$serverUrl/delete/pattie/$filename'));
+      } catch (_) {}
     }
-    _refreshImages();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${selectedFilenames.length} photo(s) deleted')),
-    );
+    await _refreshImages();
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${selectedFilenames.length} photo(s) deleted')),
+      );
+    }
   }
 
   Future<void> _downloadSelected() async {
-    final bool isMobile =
-        !Platform.isLinux && !Platform.isWindows && !Platform.isMacOS;
+    final bool canUseGal = Platform.isIOS || Platform.isAndroid;
 
     int success = 0;
-    for (var filename in selectedFilenames) {
+    for (var filename in selectedFilenames.toList()) {
       try {
         final response = await http.get(
           Uri.parse('$serverUrl/images/pattie/$filename'),
         );
         if (response.statusCode == 200) {
-          if (isMobile) {
-            await Gal.putImageBytes(response.bodyBytes, album: 'CircleScreen');
+          final bytes = response.bodyBytes;
+
+          if (canUseGal) {
+            await Gal.putImageBytes(bytes, album: 'CircleScreen');
           } else {
             final dir = await getDownloadsDirectory();
-            final path = '${dir!.path}/CircleScreen_$filename';
-            await File(path).writeAsBytes(response.bodyBytes);
+            if (dir != null) {
+              final path = '${dir.path}/CircleScreen_$filename';
+              await File(path).writeAsBytes(bytes);
+            }
           }
           success++;
         }
       } catch (_) {}
     }
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('$success photo(s) saved')));
-    setState(() => selectedFilenames.clear());
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$success photo(s) saved')),
+      );
+      setState(() => selectedFilenames.clear());
+    }
   }
 
   @override
@@ -836,7 +847,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
 }
 
 // ────────────────────────────────────────────────
-// MultiPreviewScreen (with tap to single preview)
+// MultiPreviewScreen + PreviewScreen remain unchanged
 
 class MultiPreviewScreen extends StatefulWidget {
   final List<File> imageFiles;
@@ -874,8 +885,8 @@ class _MultiPreviewScreenState extends State<MultiPreviewScreen> {
           ),
         );
         var response = await request.send().timeout(
-          const Duration(seconds: 60),
-        );
+              const Duration(seconds: 60),
+            );
         if (response.statusCode == 200) success++;
       } catch (_) {}
       if (mounted) setState(() => _uploadedCount++);
@@ -967,7 +978,6 @@ class _MultiPreviewScreenState extends State<MultiPreviewScreen> {
   }
 }
 
-// PreviewScreen (single image upload)
 class PreviewScreen extends StatelessWidget {
   final File imageFile;
 
@@ -998,9 +1008,9 @@ class PreviewScreen extends StatelessWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Connection error: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Connection error: $e')),
+        );
       }
     }
   }
