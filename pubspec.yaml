@@ -1,31 +1,27 @@
 name: brubaker_led_controls
-description: A brubaker home app simplified edition
+description: A Brubaker home app simplified edition
 
-publish_to: 'none' 
-version: 1.0.0+8
+publish_to: 'none'
+version: 1.0.0+42
 
 environment:
-  sdk: ^3.10.4
+  sdk: '>=3.4.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
   http: ^1.2.2
-  google_fonts: ^7.0.2
-
+  google_fonts: ^6.2.1
   cupertino_icons: ^1.0.8
-  image_picker: ^1.2.1
-  cached_network_image: ^3.3.1
-  gal: ^2.2.0
-  path_provider: ^2.1.4
-  permission_handler: ^12.0.1
+  image_picker: ^1.1.2
+  cached_network_image: ^3.4.0
+  gal: ^2.3.1
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  flutter_lints: ^6.0.0
-  flutter_launcher_icons: ^0.14.4
+  flutter_lints: ^4.0.0
 
 flutter_launcher_icons:
   android: "launcher_icon"
@@ -38,5 +34,3 @@ flutter:
   assets:
     - assets/
     - assets/modes/
-
-
