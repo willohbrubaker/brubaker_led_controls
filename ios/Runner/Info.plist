@@ -71,5 +71,7 @@
     <array>
         <string>arm64</string>
     </array>
+	<key>FLTEnableImpeller</key>
+	<false/>
 </dict>
 </plist>

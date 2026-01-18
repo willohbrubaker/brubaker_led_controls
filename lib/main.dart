@@ -16,7 +16,15 @@ import 'package:http_parser/http_parser.dart';
 import 'star_field.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Critical for iOS stability
+  WidgetsFlutterBinding.ensureInitialized();
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.presentError(details);
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    debugPrint("Uncaught platform error: $error");
+    return true;
+  };
+
   runApp(const BrubakerLedApp());
 }
 
