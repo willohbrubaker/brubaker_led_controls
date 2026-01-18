@@ -623,10 +623,10 @@ class _CircleHomePageState extends State<CircleHomePage> {
                   icon: const Icon(Icons.photo_library, size: 36),
                   label: const Text(
                     'Select Photos',
-                    style: TextStyle(fontSize: 22),
+                    style: TextStyle(fontSize: 16),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.primaryColor,
+                    backgroundColor: Colors.deepPurpleAccent,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 56, vertical: 24),
@@ -644,10 +644,10 @@ class _CircleHomePageState extends State<CircleHomePage> {
                   icon: const Icon(Icons.photo_library_outlined, size: 36),
                   label: const Text(
                     'Manage Library',
-                    style: TextStyle(fontSize: 22),
+                    style: TextStyle(fontSize: 16),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.primaryColor,
+                    backgroundColor: Colors.deepPurpleAccent,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 56, vertical: 24),

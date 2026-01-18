@@ -59,11 +59,27 @@
 
     <!-- ATS - keep for development (HTTP fallback) -->
     <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <true/>
-    </dict>
-
+	<dict>
+	<key>NSAllowsArbitraryLoadsInWebContent</key>
+	<true/>
+	<key>NSExceptionDomains</key>
+	<dict>
+		<key>192.168.1.198</key>
+		<dict>
+		<key>NSIncludesSubdomains</key>
+		<true/>
+		<key>NSExceptionAllowsInsecureHTTPLoads</key>
+		<true/>
+		</dict>
+		<key>108.254.1.184</key>
+		<dict>
+		<key>NSIncludesSubdomains</key>
+		<true/>
+		<key>NSExceptionAllowsInsecureHTTPLoads</key>
+		<true/>
+		</dict>
+	</dict>
+	</dict>
     <!-- App Store compliance -->
     <key>ITSAppUsesNonExemptEncryption</key>
     <false/>
@@ -72,6 +88,8 @@
         <string>arm64</string>
     </array>
 	<key>FLTEnableImpeller</key>
+	<false/>
+	<key>FLTEnableImpellerPreview</key>
 	<false/>
 </dict>
 </plist>
