@@ -95,5 +95,9 @@
 	<string>#000033</string>
 	<key>CFBundleIconName</key>
 	<string>AppIcon</string>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UIRequiresFullScreen~ipad</key>
+	<true/>
 </dict>
 </plist>
