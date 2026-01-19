@@ -93,5 +93,7 @@
 	<false/>
 	<key>UIColorName</key>
 	<string>#000033</string>
+	<key>CFBundleIconName</key>
+	<string>AppIcon</string>
 </dict>
 </plist>

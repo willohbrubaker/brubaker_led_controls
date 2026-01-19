@@ -2,7 +2,7 @@ name: brubaker_led_controls
 description: A Brubaker home app simplified edition
 
 publish_to: 'none'
-version: 1.0.0+47
+version: 1.0.0+48
 
 environment:
   sdk: '>=3.4.0 <4.0.0'
@@ -26,10 +26,13 @@ dev_dependencies:
 
 flutter_launcher_icons:
   android: "launcher_icon"
-  ios: trues
+  ios: true                      # ← fixed typo: was "trues"
   image_path: "assets/led_controls_icon.png"
   remove_alpha_ios: true
   background_color: "#000000"
+  # Optional but recommended for modern apps:
+  min_sdk_android: 21            # Android 5.0+ (very safe)
+  min_ios_version: "12.0"        # iOS 12+ (covers 99%+ of active devices)
 
 flutter:
   uses-material-design: true
