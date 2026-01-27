@@ -45,10 +45,8 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<key>NSPhotoLibraryUsageDescription</key>
-    <string>This app needs access to your photo library to let you select images for custom LED mode backgrounds or avatars.</string>
-	<key>NSCameraUsageDescription</key>
-    <string>This app needs camera access to let you take photos for custom LED mode backgrounds or avatars.</string>
+
+	<!-- Keep only if you use non-HTTPS (HTTP) connections; remove if all HTTPS -->
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
