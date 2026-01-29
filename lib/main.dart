@@ -57,60 +57,60 @@ class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
     {'name': 'constant-red', 'image': 'assets/modes/constant-red.png'},
     {
       'name': 'proletariat-crackle',
-      'image': 'assets/modes/proletariat-crackle.png',
+      'image': 'assets/modes/proletariat-crackle.png'
     },
     {'name': 'soma-haze', 'image': 'assets/modes/soma-haze.png'},
     {'name': 'loonie-freefall', 'image': 'assets/modes/loonie-freefall.png'},
     {'name': 'bokanovsky-burst', 'image': 'assets/modes/bokanovsky-burst.png'},
     {
       'name': 'total-perspective-vortex',
-      'image': 'assets/modes/total-perspective-vortex.png',
+      'image': 'assets/modes/total-perspective-vortex.png'
     },
     {
       'name': 'golgafrincham-drift',
-      'image': 'assets/modes/golgafrincham-drift.png',
+      'image': 'assets/modes/golgafrincham-drift.png'
     },
     {
       'name': 'bistromathics-surge',
-      'image': 'assets/modes/bistromathics-surge.png',
+      'image': 'assets/modes/bistromathics-surge.png'
     },
     {
       'name': 'groks-dissolution',
-      'image': 'assets/modes/groks-dissolution.png',
+      'image': 'assets/modes/groks-dissolution.png'
     },
     {'name': 'newspeak-shrink', 'image': 'assets/modes/newspeak-shrink.png'},
     {
       'name': 'nolite-te-bastardes',
-      'image': 'assets/modes/nolite-te-bastardes.png',
+      'image': 'assets/modes/nolite-te-bastardes.png'
     },
     {
       'name': 'infinite-improbability-drive',
-      'image': 'assets/modes/infinite-improbability-drive.png',
+      'image': 'assets/modes/infinite-improbability-drive.png'
     },
     {
       'name': 'big-brother-glare',
-      'image': 'assets/modes/big-brother-glare.png',
+      'image': 'assets/modes/big-brother-glare.png'
     },
     {
       'name': 'replicant-retirement',
-      'image': 'assets/modes/replicant-retirement.png',
+      'image': 'assets/modes/replicant-retirement.png'
     },
     {
       'name': 'water-brother-bond',
-      'image': 'assets/modes/water-brother-bond.png',
+      'image': 'assets/modes/water-brother-bond.png'
     },
     {'name': 'hypnopaedia-hum', 'image': 'assets/modes/hypnopaedia-hum.png'},
     {
       'name': 'vogon-poetry-pulse',
-      'image': 'assets/modes/vogon-poetry-pulse.png',
+      'image': 'assets/modes/vogon-poetry-pulse.png'
     },
     {
       'name': 'thought-police-flash',
-      'image': 'assets/modes/thought-police-flash.png',
+      'image': 'assets/modes/thought-police-flash.png'
     },
     {
       'name': 'electric-sheep-dream',
-      'image': 'assets/modes/electric-sheep-dream.png',
+      'image': 'assets/modes/electric-sheep-dream.png'
     },
     {'name': 'QRNG', 'image': 'assets/modes/qrng.png'},
     {'name': 'sd-client', 'image': 'assets/modes/sd-client.png'},
@@ -169,9 +169,8 @@ class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Connection issue: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Connection issue: $e')));
       }
     } finally {
       if (mounted) setState(() => isLoading = false);
@@ -200,9 +199,8 @@ class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Update failed: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Update failed: $e')));
       }
     } finally {
       if (mounted) setState(() => isUpdating = false);
@@ -315,127 +313,91 @@ class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
                           padding: const EdgeInsets.all(16),
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 0.78,
-                                crossAxisSpacing: 16,
-                                mainAxisSpacing: 16,
-                              ),
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.78,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                          ),
                           itemCount: modes.length,
                           itemBuilder: (context, index) {
                             final mode = modes[index];
                             final isSelected = mode['name'] == currentMode;
 
-                            return AnimatedBuilder(
-                              animation: _glowAnim,
-                              builder: (context, child) {
-                                final glowIntensity =
-                                    _glowAnim.value; // 0.6 to 1.4
+                            return GestureDetector(
+                              onTap: isUpdating
+                                  ? null
+                                  : () => _updateMode(mode['name']!),
+                              child: AnimatedBuilder(
+                                animation: _glowAnim,
+                                builder: (context, child) {
+                                  final glow = _glowAnim.value; // 0.6 → 1.4
 
-                                return GestureDetector(
-                                  onTap: isUpdating
-                                      ? null
-                                      : () => _updateMode(mode['name']!),
-                                  child: Transform.scale(
-                                    scale: isSelected
-                                        ? 1.0 + (0.03 * (glowIntensity - 0.6))
-                                        : 1.0, // very subtle breathing
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: theme.colorScheme.surface
-                                            .withOpacity(0.16),
-                                        // Pulsing outer glow when selected (multiple shadows for depth)
-                                        boxShadow: isSelected
-                                            ? [
-                                                // Strong inner glow
-                                                BoxShadow(
-                                                  color: theme.primaryColor
-                                                      .withOpacity(
-                                                        0.45 * glowIntensity,
-                                                      ),
-                                                  blurRadius:
-                                                      12 * glowIntensity,
-                                                  spreadRadius: 2,
-                                                ),
-                                                // Medium outer glow layer
-                                                BoxShadow(
-                                                  color: theme.primaryColor
-                                                      .withOpacity(
-                                                        0.25 * glowIntensity,
-                                                      ),
-                                                  blurRadius:
-                                                      24 * glowIntensity,
-                                                  spreadRadius: 6,
-                                                ),
-                                                // Very soft distant glow
-                                                BoxShadow(
-                                                  color: theme.primaryColor
-                                                      .withOpacity(
-                                                        0.12 * glowIntensity,
-                                                      ),
-                                                  blurRadius:
-                                                      40 * glowIntensity,
-                                                  spreadRadius: 12,
-                                                ),
-                                              ]
-                                            : null,
-                                        border: Border.all(
-                                          color: isSelected
-                                              ? theme.primaryColor.withOpacity(
-                                                  0.7 * glowIntensity,
-                                                )
-                                              : Colors.white.withOpacity(0.18),
-                                          width: isSelected ? 2.2 : 1,
-                                        ),
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: BackdropFilter(
-                                          filter: ImageFilter.blur(
-                                            sigmaX: 10,
-                                            sigmaY: 10,
-                                          ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Expanded(
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                    12,
-                                                  ),
-                                                  child: Image.asset(
-                                                    mode['image']!,
-                                                    fit: BoxFit.contain,
-                                                  ),
+                                  Widget cardContent = Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(18),
+                                      color: theme.colorScheme.surface
+                                          .withOpacity(0.16),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(18),
+                                      child: BackdropFilter(
+                                        filter: ImageFilter.blur(
+                                            sigmaX: 10, sigmaY: 10),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Expanded(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(12),
+                                                child: Image.asset(
+                                                  mode['image']!,
+                                                  fit: BoxFit.contain,
                                                 ),
                                               ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                  bottom: 12,
-                                                ),
-                                                child: Text(
-                                                  titleCase(mode['name']!),
-                                                  textAlign: TextAlign.center,
-                                                  style: GoogleFonts.orbitron(
-                                                    fontSize: 14,
-                                                    fontWeight: isSelected
-                                                        ? FontWeight.bold
-                                                        : FontWeight.normal,
-                                                    color: isSelected
-                                                        ? null
-                                                        : Colors.white70,
-                                                  ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 12),
+                                              child: Text(
+                                                titleCase(mode['name']!),
+                                                textAlign: TextAlign.center,
+                                                style: GoogleFonts.orbitron(
+                                                  fontSize: 14,
+                                                  fontWeight: isSelected
+                                                      ? FontWeight.bold
+                                                      : FontWeight.normal,
+                                                  color: isSelected
+                                                      ? null
+                                                      : Colors.white70,
                                                 ),
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+
+                                  if (!isSelected) {
+                                    return Transform.scale(
+                                      scale: 1.0,
+                                      child: cardContent,
+                                    );
+                                  }
+
+                                  // Selected: rainbow glowing border + pulse
+                                  return Transform.scale(
+                                    scale: 1.0 + (0.03 * (glow - 0.6)),
+                                    child: _RainbowGlowBorder(
+                                      glowIntensity: glow,
+                                      primaryColor: theme.primaryColor,
+                                      child: cardContent,
+                                    ),
+                                  );
+                                },
+                              ),
                             );
                           },
                         ),
@@ -445,6 +407,111 @@ class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
           ),
         ],
       ),
+    );
+  }
+}
+
+// ────────────────────────────────────────────────
+//  Animated rainbow + pulsing glow border widget
+// ────────────────────────────────────────────────
+class _RainbowGlowBorder extends StatefulWidget {
+  final Widget child;
+  final double glowIntensity;
+  final Color primaryColor;
+
+  const _RainbowGlowBorder({
+    required this.child,
+    required this.glowIntensity,
+    required this.primaryColor,
+  });
+
+  @override
+  State<_RainbowGlowBorder> createState() => _RainbowGlowBorderState();
+}
+
+class _RainbowGlowBorderState extends State<_RainbowGlowBorder>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _rainbowController;
+
+  @override
+  void initState() {
+    super.initState();
+    _rainbowController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 8),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _rainbowController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final glow = widget.glowIntensity.clamp(0.6, 1.4);
+
+    return AnimatedBuilder(
+      animation: _rainbowController,
+      builder: (context, _) {
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            gradient: SweepGradient(
+              colors: const [
+                Color(0xFFFF0000), // red
+                Color(0xFFFF8800), // orange
+                Color(0xFFFFFF00), // yellow
+                Color(0xFF00FF00), // green
+                Color(0xFF00FFFF), // cyan
+                Color(0xFF0000FF), // blue
+                Color(0xFFAA00FF), // violet
+                Color(0xFFFF0000),
+              ],
+              stops: const [0.0, 0.14, 0.28, 0.42, 0.57, 0.71, 0.85, 1.0],
+              transform:
+                  GradientRotation(_rainbowController.value * 2 * 3.14159),
+            ),
+            boxShadow: [
+              // Extra soft outer glow
+              BoxShadow(
+                color: widget.primaryColor.withOpacity(0.25 * glow),
+                blurRadius: 28 * glow,
+                spreadRadius: 8,
+              ),
+            ],
+          ),
+          child: Container(
+            margin: const EdgeInsets.all(3.2), // border thickness
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(17),
+              color: Theme.of(context).colorScheme.surface.withOpacity(0.18),
+              boxShadow: [
+                // Soft inner highlight/glow (no inset needed)
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.10 * glow),
+                  blurRadius: 10 * glow,
+                  spreadRadius: -2, // negative spread pulls it inward a bit
+                  offset: const Offset(0, 0),
+                ),
+                // Main colorful outer glow layers
+                BoxShadow(
+                  color: widget.primaryColor.withOpacity(0.5 * glow),
+                  blurRadius: 14 * glow,
+                  spreadRadius: 2,
+                ),
+                BoxShadow(
+                  color: widget.primaryColor.withOpacity(0.3 * glow),
+                  blurRadius: 24 * glow,
+                  spreadRadius: 6,
+                ),
+              ],
+            ),
+            child: widget.child,
+          ),
+        );
+      },
     );
   }
 }
