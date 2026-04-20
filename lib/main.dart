@@ -40,9 +40,11 @@ class BrubakerLedControlsScreen extends StatefulWidget {
 
 class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
     with SingleTickerProviderStateMixin {
-  static const String localServer = 'http://192.168.1.198:5000';
-  static const String publicServer = 'http://108.254.1.184:5000';
-  String activeServer = localServer;
+  // ────────────────────────────────────────────────
+  // CHANGE THIS TO YOUR PUBLIC DNS
+  // ────────────────────────────────────────────────
+  static const String serverUrl =
+      'https://pebbles.immenseaccumulationonline.online/';
 
   String currentMode = 'off';
   bool isLoading = true;
@@ -128,7 +130,7 @@ class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
       CurvedAnimation(parent: _glowController, curve: Curves.easeInOutCubic),
     );
 
-    _checkAndFetchMode();
+    _fetchCurrentMode();
   }
 
   @override
@@ -137,30 +139,14 @@ class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
     super.dispose();
   }
 
-  Future<void> _checkAndFetchMode() async {
+  Future<void> _fetchCurrentMode() async {
     setState(() => isLoading = true);
 
     try {
       final response = await http
-          .get(Uri.parse('$localServer/mode'))
-          .timeout(const Duration(seconds: 3));
-      if (response.statusCode == 200) {
-        activeServer = localServer;
-      } else {
-        activeServer = publicServer;
-      }
-    } catch (_) {
-      activeServer = publicServer;
-    }
+          .get(Uri.parse('$serverUrl/mode'))
+          .timeout(const Duration(seconds: 10));
 
-    await _fetchCurrentMode();
-  }
-
-  Future<void> _fetchCurrentMode() async {
-    try {
-      final response = await http
-          .get(Uri.parse('$activeServer/mode'))
-          .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final mode = response.body.trim();
         if (modes.any((m) => m['name'] == mode)) {
@@ -169,8 +155,9 @@ class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Connection issue: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not connect to LED server')),
+        );
       }
     } finally {
       if (mounted) setState(() => isLoading = false);
@@ -185,11 +172,11 @@ class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
     try {
       final response = await http
           .post(
-            Uri.parse('$activeServer/update'),
+            Uri.parse('$serverUrl/update'),
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({'mode': modeName}),
           )
-          .timeout(const Duration(seconds: 5));
+          .timeout(const Duration(seconds: 8));
 
       if (response.statusCode == 200 && mounted) {
         setState(() => currentMode = modeName);
@@ -199,8 +186,9 @@ class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Update failed: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update mode')),
+        );
       }
     } finally {
       if (mounted) setState(() => isUpdating = false);
@@ -210,7 +198,7 @@ class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
   String titleCase(String text) {
     return text
         .split('-')
-        .map((w) => w[0].toUpperCase() + w.substring(1))
+        .map((w) => w.isNotEmpty ? w[0].toUpperCase() + w.substring(1) : '')
         .join(' ');
   }
 
@@ -330,7 +318,7 @@ class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
                               child: AnimatedBuilder(
                                 animation: _glowAnim,
                                 builder: (context, child) {
-                                  final glow = _glowAnim.value; // 0.6 → 1.4
+                                  final glow = _glowAnim.value;
 
                                   Widget cardContent = Container(
                                     decoration: BoxDecoration(
@@ -381,13 +369,9 @@ class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
                                   );
 
                                   if (!isSelected) {
-                                    return Transform.scale(
-                                      scale: 1.0,
-                                      child: cardContent,
-                                    );
+                                    return cardContent;
                                   }
 
-                                  // Selected: rainbow glowing border + pulse
                                   return Transform.scale(
                                     scale: 1.0 + (0.03 * (glow - 0.6)),
                                     child: _RainbowGlowBorder(
@@ -410,6 +394,8 @@ class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
     );
   }
 }
+
+// _RainbowGlowBorder widget remains unchanged — keep your existing one at the bottom
 
 // ────────────────────────────────────────────────
 //  Animated rainbow + pulsing glow border widget
