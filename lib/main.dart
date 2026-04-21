@@ -110,12 +110,11 @@ class _BrubakerLedControlsScreenState extends State<BrubakerLedControlsScreen>
       'name': 'thought-police-flash',
       'image': 'assets/modes/thought-police-flash.png'
     },
+    {'name': 'random-conquest', 'image': 'assets/modes/battle-blocks.png'},
     {
-      'name': 'electric-sheep-dream',
-      'image': 'assets/modes/electric-sheep-dream.png'
+      'name': 'red-green-conquest',
+      'image': 'assets/modes/red-green-conquest.png'
     },
-    {'name': 'QRNG', 'image': 'assets/modes/qrng.png'},
-    {'name': 'sd-client', 'image': 'assets/modes/sd-client.png'},
   ];
 
   @override
