@@ -2,7 +2,9 @@ name: brubaker_led_controls
 description: A brubaker home app simplified edition
 
 publish_to: 'none' 
-version: 1.0.0+676767676767
+# versionName+versionCode — Android versionCode must fit a 32-bit int (max 2100000000).
+# Bump the number after + for each store/sideload release.
+version: 1.0.0+1
 
 environment:
   sdk: ^3.5.1

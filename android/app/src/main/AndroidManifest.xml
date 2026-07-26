@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Required for http/https calls to LED servers -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
-        android:label="brubaker_led_controls"
+        android:label="Brubaker LED Controls"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
